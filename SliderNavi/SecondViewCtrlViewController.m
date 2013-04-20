@@ -7,6 +7,7 @@
 //
 
 #import "SecondViewCtrlViewController.h"
+#import "ViewController.h"
 
 @interface SecondViewCtrlViewController ()
 
@@ -35,4 +36,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc {
+    [_buttonClicked release];
+    [super dealloc];
+}
+- (void)viewDidUnload {
+    [self setButtonClicked:nil];
+    [super viewDidUnload];
+}
+- (IBAction)buttoncliced:(id)sender {
+    ViewController *view = [[ViewController alloc] init];
+    [self.navigationController pushViewController:view animated:YES];
+    [view release];
+}
 @end

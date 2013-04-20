@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SecondViewCtrlViewController : UIViewController
+@property (retain, nonatomic) IBOutlet UIButton *buttonClicked;
+- (IBAction)buttoncliced:(id)sender;
 
 @end

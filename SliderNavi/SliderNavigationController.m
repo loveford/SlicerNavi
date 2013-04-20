@@ -86,7 +86,6 @@
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {
-    UIViewController *popedController = [super popViewControllerAnimated:NO];
     self.backgroudView.alpha = 0.7;
     self.topImageView.frame = CGRectMake(15,15, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
     [UIView animateWithDuration:0.3 animations:^{
@@ -96,7 +95,7 @@
     } completion:^(BOOL finished) {
         [self back];
     }];
-    return popedController;
+    return nil;
 }
 
 //- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
@@ -230,6 +229,14 @@
     //self.navigationController.view.alpha = 0.0;
     [super popViewControllerAnimated:NO];
     self.view.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.topImageView.image];
+    [self.view addSubview:imageView];
+    [UIView animateWithDuration:0.3 animations:^{
+        imageView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [imageView removeFromSuperview];
+        [imageView release];
+    }];
     //self.navigationController.view.alpha = 1.0;
     [self  configBackInfo];
 }
