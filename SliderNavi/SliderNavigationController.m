@@ -25,6 +25,11 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.topImageView = [[[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]autorelease];
+        self.backgroudView = [[[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]]autorelease];
+        self.backgroudView.backgroundColor = [UIColor blackColor];
+        [[[[UIApplication sharedApplication] delegate] window] addSubview:self.topImageView];
+        [[[[UIApplication sharedApplication] delegate] window] addSubview:self.backgroudView];
     }
     return self;
 }
@@ -76,7 +81,7 @@
         [UIView animateWithDuration:0.3 animations:^{
             self.view.frame = CGRectMake(0,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
             self.backgroudView.alpha = 1;
-            self.topImageView.frame = CGRectMake(15,15, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+            self.topImageView.frame = CGRectMake(10,10, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
         } completion:^(BOOL finished) {
             
         }];
@@ -87,7 +92,7 @@
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated
 {
     self.backgroudView.alpha = 0.7;
-    self.topImageView.frame = CGRectMake(15,15, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    self.topImageView.frame = CGRectMake(10,10, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
     [UIView animateWithDuration:0.3 animations:^{
         self.view.frame = CGRectMake(CGRectGetWidth(self.view.frame),self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
         self.backgroudView.alpha = 0;
@@ -197,27 +202,25 @@
         x=270;
     }
     self.view.frame = CGRectMake(x,self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-    float alpha = 1-x/250;
-    self.backgroudView.alpha = alpha;
-    self.topImageView.frame = CGRectMake(1000/x,1000/x, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    float alpha = x / CGRectGetWidth(self.view.frame) > 0.5 ? x / CGRectGetWidth(self.view.frame) : 0.5;
+    self.backgroudView.alpha = 1 - alpha;
+    self.topImageView.frame = CGRectMake(10 *(1 - x/CGRectGetWidth(self.view.frame)),10 *(1 - x/CGRectGetWidth(self.view.frame)), self.topImageView.frame.size.width, self.topImageView.frame.size.height);
 }
 
 - (void)slideAnimationView
 {
     CGFloat x = self.view.frame.origin.x;
-    if (x>=180) {
-        CGFloat time = (270-x)/1000;
-        [UIView animateWithDuration:time animations:^{
-            self.view.frame = CGRectMake(270, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+    if (x>=100) {
+        [UIView animateWithDuration:0.3 animations:^{
+            self.view.frame = CGRectMake(CGRectGetWidth(self.view.frame), self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
             
         } completion:^(BOOL finished) {
             [self back];
         }];
     }
     else{
-        CGFloat time = x/2000;
         [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:time];
+        [UIView setAnimationDuration:0.3];
         [UIView setAnimationDelegate:self];
         self.view.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
