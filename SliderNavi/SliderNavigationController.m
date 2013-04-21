@@ -85,6 +85,7 @@
         } completion:^(BOOL finished) {
             
         }];
+        
     }
     [super pushViewController:viewController animated:NO];
 }
@@ -103,16 +104,36 @@
     return nil;
 }
 
-//- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
-//{
-//    
-//}
-//
-//
-//- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
-//{
-//    
-//}
+- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
+{
+    [self configBackToRootInfo];
+    self.backgroudView.alpha = 0.7;
+    self.topImageView.frame = CGRectMake(10,10, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.frame = CGRectMake(CGRectGetWidth(self.view.frame),self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+        self.backgroudView.alpha = 0;
+        self.topImageView.frame = CGRectMake(0,0, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    } completion:^(BOOL finished) {
+        [self backToRoot];
+    }];
+    return nil;
+}
+
+
+- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [self configBackToViewContoller:viewController];
+    self.backgroudView.alpha = 0.7;
+    self.topImageView.frame = CGRectMake(10,10, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    [UIView animateWithDuration:0.3 animations:^{
+        self.view.frame = CGRectMake(CGRectGetWidth(self.view.frame),self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+        self.backgroudView.alpha = 0;
+        self.topImageView.frame = CGRectMake(0,0, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+    } completion:^(BOOL finished) {
+        [self backToViewController:viewController];
+    }];
+    return nil;
+}
 
 #pragma mark - Custom Methods
 
@@ -256,4 +277,65 @@
     }
 }
 
+#pragma mark - popToRoot
+
+- (void)configBackToRootInfo
+{
+    if (self.imageArray && self.imageArray.count>0)
+    {
+        [self.imageArray removeObjectsInRange:NSMakeRange(1, self.imageArray.count - 1)];
+        if (self.imageArray && self.imageArray.count>0)
+        {
+            self.topImageView.image = [self.imageArray lastObject];
+        }
+    }
+
+}
+
+- (void)backToRoot
+{
+    [super popToRootViewControllerAnimated:NO];
+    self.view.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.topImageView.image];
+    [self.view addSubview:imageView];
+    [UIView animateWithDuration:0.3 animations:^{
+        imageView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [imageView removeFromSuperview];
+        [imageView release];
+    }];
+    //self.navigationController.view.alpha = 1.0;
+    [self  configBackInfo];
+}
+
+#pragma mark - PopToViewAtIndex
+
+- (void)configBackToViewContoller:(UIViewController *)viewController
+{
+    NSInteger index = [self.viewControllers indexOfObject:viewController];
+    if (self.imageArray && self.imageArray.count>index)
+    {
+        [self.imageArray removeObjectsInRange:NSMakeRange(index + 1, self.imageArray.count - 1 - index)];
+        if (self.imageArray && self.imageArray.count>0)
+        {
+            self.topImageView.image = [self.imageArray lastObject];
+        }
+    }
+}
+
+- (void)backToViewController:(UIViewController *)viewController
+{
+    [super popToViewController:viewController animated:NO];
+    self.view.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.topImageView.image];
+    [self.view addSubview:imageView];
+    [UIView animateWithDuration:0.3 animations:^{
+        imageView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [imageView removeFromSuperview];
+        [imageView release];
+    }];
+    //self.navigationController.view.alpha = 1.0;
+    [self  configBackInfo];
+}
 @end

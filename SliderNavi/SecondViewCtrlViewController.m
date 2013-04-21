@@ -48,5 +48,6 @@
     ViewController *view = [[ViewController alloc] init];
     [self.navigationController pushViewController:view animated:YES];
     [view release];
+    
 }
 @end
