@@ -234,7 +234,8 @@
     if (x>=100) {
         [UIView animateWithDuration:0.3 animations:^{
             self.view.frame = CGRectMake(CGRectGetWidth(self.view.frame), self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
-            
+            self.backgroudView.alpha = 0;
+            self.topImageView.frame = CGRectMake(0, 0, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
         } completion:^(BOOL finished) {
             [self back];
         }];
@@ -244,6 +245,8 @@
         [UIView setAnimationDuration:0.3];
         [UIView setAnimationDelegate:self];
         self.view.frame = CGRectMake(0, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.height);
+        self.backgroudView.alpha = 0.8;
+        self.topImageView.frame = CGRectMake(10, 10, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
         [UIView commitAnimations];
     }
 }
