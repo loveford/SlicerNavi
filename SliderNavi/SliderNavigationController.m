@@ -190,11 +190,9 @@
 
 #pragma mark -UIPanGestureRecognizer Selector
 -(void)handelPan:(UIPanGestureRecognizer*)gestureRecognizer{
-    
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
         self.lastInstance = 0.0;
-        return;
     }
     else if (gestureRecognizer.state == UIGestureRecognizerStateChanged)
     {
