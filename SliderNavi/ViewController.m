@@ -10,6 +10,7 @@
 #import "SecondViewCtrlViewController.h"
 #import "LeftPanelViewController.h"
 #import "RightPanelViewController.h"
+#import "CenterViewController.h"
 
 #define CENTER_TAG 1
 #define LEFT_PANEL_TAG 2
@@ -20,7 +21,8 @@
 #define SLIDE_TIMING .25
 #define PANEL_WIDTH 60
 
-@interface ViewController ()<LeftPanelViewControllerDelegate, RightPanelViewControllerDelegate,UIGestureRecognizerDelegate>
+@interface ViewController ()<CenterViewControllerDelegate,UIGestureRecognizerDelegate>
+@property (nonatomic, retain) CenterViewController *centerViewController;
 @property (nonatomic, retain) LeftPanelViewController *leftPanelViewController;
 @property (nonatomic, assign) BOOL showingLeftPanel;
 @property (nonatomic, retain) RightPanelViewController *rightPanelViewController;
@@ -34,7 +36,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setupGestures];
+    self.navigationController.navigationBarHidden = YES;
+    [self setupView];
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -44,25 +47,30 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)ButtonClicked:(id)sender {
-    SecondViewCtrlViewController *secondView = [[SecondViewCtrlViewController alloc] init];
-    [self.navigationController pushViewController:secondView animated:YES];
-    [secondView release];
-}
-
 #pragma mark -
 #pragma mark Setup View
 
+-(void)setupView {
+	self.centerViewController = [[CenterViewController alloc] initWithNibName:@"CenterViewController" bundle:nil];
+	self.centerViewController.view.tag = CENTER_TAG;
+	self.centerViewController.delegate = self;
+	[self.view addSubview:self.centerViewController.view];
+	[self addChildViewController:_centerViewController];
+	[_centerViewController didMoveToParentViewController:self];
+	
+	[self setupGestures];
+}
+
 -(void)showCenterViewWithShadow:(BOOL)value withOffset:(double)offset {
 	if (value) {
-		[self.view.layer setCornerRadius:CORNER_RADIUS];
-		[self.view.layer setShadowColor:[UIColor blackColor].CGColor];
-		[self.view.layer setShadowOpacity:0.8];
-		[self.view.layer setShadowOffset:CGSizeMake(offset, offset)];
+		[_centerViewController.view.layer setCornerRadius:CORNER_RADIUS];
+		[_centerViewController.view.layer setShadowColor:[UIColor blackColor].CGColor];
+		[_centerViewController.view.layer setShadowOpacity:0.8];
+		[_centerViewController.view.layer setShadowOffset:CGSizeMake(offset, offset)];
         
 	} else {
-		[self.view.layer setCornerRadius:0.0f];
-		[self.view.layer setShadowOffset:CGSizeMake(offset, offset)];
+		[_centerViewController.view.layer setCornerRadius:0.0f];
+		[_centerViewController.view.layer setShadowOffset:CGSizeMake(offset, offset)];
 	}
 }
 
@@ -71,11 +79,13 @@
 	if (_leftPanelViewController != nil) {
 		[self.leftPanelViewController.view removeFromSuperview];
 		self.leftPanelViewController = nil;
+		_centerViewController.leftButton.tag = 1;
 		self.showingLeftPanel = NO;
 	}
 	if (_rightPanelViewController != nil) {
 		[self.rightPanelViewController.view removeFromSuperview];
 		self.rightPanelViewController = nil;
+		_centerViewController.rightButton.tag = 1;
 		self.showingRightPanel = NO;
 	}
 	// remove view shadows
@@ -89,7 +99,7 @@
 		// this is where you define the view for the left panel
 		self.leftPanelViewController = [[LeftPanelViewController alloc] initWithNibName:@"LeftPanelViewController" bundle:nil];
 		self.leftPanelViewController.view.tag = LEFT_PANEL_TAG;
-		self.leftPanelViewController.delegate = self;
+		self.leftPanelViewController.delegate = _centerViewController;
         
 		[self.view addSubview:self.leftPanelViewController.view];
         
@@ -115,7 +125,7 @@
 		// this is where you define the view for the right panel
 		self.rightPanelViewController = [[RightPanelViewController alloc] initWithNibName:@"RightPanelViewController" bundle:nil];
 		self.rightPanelViewController.view.tag = RIGHT_PANEL_TAG;
-		self.rightPanelViewController.delegate = self;
+		self.rightPanelViewController.delegate = _centerViewController;
 		
 		[self.view addSubview:self.rightPanelViewController.view];
 		
@@ -144,7 +154,12 @@
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
     
-	[self.view addGestureRecognizer:panRecognizer];
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:_centerViewController action:@selector(handleGesture:)];
+    [_centerViewController.view addGestureRecognizer:gestureRecognizer];
+    [gestureRecognizer release];
+    
+	[_centerViewController.view addGestureRecognizer:panRecognizer];
+    [panRecognizer release];
 }
 
 -(void)movePanel:(id)sender {
@@ -198,7 +213,7 @@
         }
         
         // are we more than halfway, if so, show the panel when done dragging by setting this value to YES (1)
-        _showPanel = abs([sender view].center.x - self.view.frame.size.width/2) > self.view.frame.size.width/2;
+        _showPanel = abs([sender view].center.x - _centerViewController.view.frame.size.width/2) > _centerViewController.view.frame.size.width/2;
         
         // allow dragging only in x coordinates by only updating the x coordinate with translation position
         [sender view].center = CGPointMake([sender view].center.x + translatedPoint.x, [sender view].center.y);
@@ -223,12 +238,12 @@
 	[self.view sendSubviewToBack:childView];
     
 	[UIView animateWithDuration:SLIDE_TIMING delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.view.frame = CGRectMake(-self.view.frame.size.width + PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
+        _centerViewController.view.frame = CGRectMake(-self.view.frame.size.width + PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
     }
                      completion:^(BOOL finished) {
                          if (finished) {
                              
-//                             _centerViewController.rightButton.tag = 0;
+                             _centerViewController.rightButton.tag = 0;
                          }
                      }];
 }
@@ -238,18 +253,18 @@
 	[self.view sendSubviewToBack:childView];
     
 	[UIView animateWithDuration:SLIDE_TIMING delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.view.frame = CGRectMake(self.view.frame.size.width - PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
+        _centerViewController.view.frame = CGRectMake(self.view.frame.size.width - PANEL_WIDTH, 0, self.view.frame.size.width, self.view.frame.size.height);
     }
                      completion:^(BOOL finished) {
                          if (finished) {
-//                             _centerViewController.leftButton.tag = 0;
+                             _centerViewController.leftButton.tag = 0;
                          }
                      }];
 }
 
 -(void)movePanelToOriginalPosition {
 	[UIView animateWithDuration:SLIDE_TIMING delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        _centerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     }
                      completion:^(BOOL finished) {
                          if (finished) {

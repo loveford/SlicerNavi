@@ -61,6 +61,8 @@
 		2AE7A31D172A898500BCCEBE /* Animal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE7A31C172A898500BCCEBE /* Animal.m */; };
 		2AE7A320172A8E4100BCCEBE /* MainCellLeft.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AE7A31E172A8E4100BCCEBE /* MainCellLeft.xib */; };
 		2AE7A321172A8E4100BCCEBE /* MainCellRight.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AE7A31F172A8E4100BCCEBE /* MainCellRight.xib */; };
+		2AE7A324172A90DE00BCCEBE /* CenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AE7A323172A90DD00BCCEBE /* CenterViewController.m */; };
+		2AE7A326172A90E700BCCEBE /* CenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2AE7A325172A90E700BCCEBE /* CenterViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -128,6 +130,9 @@
 		2AE7A31C172A898500BCCEBE /* Animal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Animal.m; sourceTree = "<group>"; };
 		2AE7A31E172A8E4100BCCEBE /* MainCellLeft.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainCellLeft.xib; sourceTree = "<group>"; };
 		2AE7A31F172A8E4100BCCEBE /* MainCellRight.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainCellRight.xib; sourceTree = "<group>"; };
+		2AE7A322172A90DD00BCCEBE /* CenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CenterViewController.h; sourceTree = "<group>"; };
+		2AE7A323172A90DD00BCCEBE /* CenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CenterViewController.m; sourceTree = "<group>"; };
+		2AE7A325172A90E700BCCEBE /* CenterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CenterViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +216,8 @@
 				2AE7A2CC172A86C600BCCEBE /* LeftPanelViewController.m */,
 				2AE7A2CD172A86C600BCCEBE /* RightPanelViewController.h */,
 				2AE7A2CE172A86C600BCCEBE /* RightPanelViewController.m */,
+				2AE7A322172A90DD00BCCEBE /* CenterViewController.h */,
+				2AE7A323172A90DD00BCCEBE /* CenterViewController.m */,
 				2AD702F7172269DA00E8E38F /* ViewController.h */,
 				2AD702F8172269DA00E8E38F /* ViewController.m */,
 				2AD7030717226E6700E8E38F /* SecondViewCtrlViewController.h */,
@@ -222,6 +229,7 @@
 		2AE7A2D7172A871B00BCCEBE /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2AE7A325172A90E700BCCEBE /* CenterViewController.xib */,
 				2AE7A31E172A8E4100BCCEBE /* MainCellLeft.xib */,
 				2AE7A31F172A8E4100BCCEBE /* MainCellRight.xib */,
 				2AE7A2D3172A870100BCCEBE /* LeftPanelViewController.xib */,
@@ -380,6 +388,7 @@
 				2AE7A31A172A878B00BCCEBE /* ID-10029135.jpg in Resources */,
 				2AE7A320172A8E4100BCCEBE /* MainCellLeft.xib in Resources */,
 				2AE7A321172A8E4100BCCEBE /* MainCellRight.xib in Resources */,
+				2AE7A326172A90E700BCCEBE /* CenterViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +407,7 @@
 				2AE7A2CF172A86C600BCCEBE /* LeftPanelViewController.m in Sources */,
 				2AE7A2D0172A86C600BCCEBE /* RightPanelViewController.m in Sources */,
 				2AE7A31D172A898500BCCEBE /* Animal.m in Sources */,
+				2AE7A324172A90DE00BCCEBE /* CenterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
