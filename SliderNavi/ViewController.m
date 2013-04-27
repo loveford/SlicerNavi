@@ -26,6 +26,7 @@
 @property (nonatomic, retain) LeftPanelViewController *leftPanelViewController;
 @property (nonatomic, assign) BOOL showingLeftPanel;
 @property (nonatomic, retain) RightPanelViewController *rightPanelViewController;
+@property (nonatomic, retain) UIView *backGroundView;
 @property (nonatomic, assign) BOOL showingRightPanel;
 @property (nonatomic, assign) BOOL showPanel;
 @property (nonatomic, assign) CGPoint preVelocity;
@@ -37,6 +38,7 @@
 {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
+    self.view.backgroundColor = [UIColor blackColor];
     [self setupView];
 	// Do any additional setup after loading the view, typically from a nib.
 }
@@ -57,19 +59,24 @@
 	[self.view addSubview:self.centerViewController.view];
 	[self addChildViewController:_centerViewController];
 	[_centerViewController didMoveToParentViewController:self];
+    
+    self.backGroundView = [[[UIView alloc] initWithFrame:self.centerViewController.view.bounds] autorelease];
+    self.backGroundView.backgroundColor = [UIColor blackColor];
+    [self.view insertSubview:_backGroundView belowSubview:_centerViewController.view];
+    
 	
 	[self setupGestures];
 }
 
 -(void)showCenterViewWithShadow:(BOOL)value withOffset:(double)offset {
 	if (value) {
-		[_centerViewController.view.layer setCornerRadius:CORNER_RADIUS];
+//		[_centerViewController.view.layer setCornerRadius:CORNER_RADIUS];
 		[_centerViewController.view.layer setShadowColor:[UIColor blackColor].CGColor];
 		[_centerViewController.view.layer setShadowOpacity:0.8];
 		[_centerViewController.view.layer setShadowOffset:CGSizeMake(offset, offset)];
         
 	} else {
-		[_centerViewController.view.layer setCornerRadius:0.0f];
+//		[_centerViewController.view.layer setCornerRadius:0.0f];
 		[_centerViewController.view.layer setShadowOffset:CGSizeMake(offset, offset)];
 	}
 }
@@ -154,7 +161,7 @@
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:_centerViewController action:@selector(handleGesture:)];
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
     [_centerViewController.view addGestureRecognizer:gestureRecognizer];
     [gestureRecognizer release];
     
@@ -206,18 +213,14 @@
 	}
     
 	if([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateChanged) {
-        if(velocity.x > 0) {
-            // NSLog(@"gesture went right");
-        } else {
-            // NSLog(@"gesture went left");
-        }
-        
         // are we more than halfway, if so, show the panel when done dragging by setting this value to YES (1)
         _showPanel = abs([sender view].center.x - _centerViewController.view.frame.size.width/2) > _centerViewController.view.frame.size.width/2;
         
         // allow dragging only in x coordinates by only updating the x coordinate with translation position
         [sender view].center = CGPointMake([sender view].center.x + translatedPoint.x, [sender view].center.y);
         [(UIPanGestureRecognizer*)sender setTranslation:CGPointMake(0,0) inView:self.view];
+        
+        CGFloat offsetX = abs([sender view].frame.origin.x - 0);
         
         // if you needed to check for a change in direction, you could use this code to do so
         if(velocity.x*_preVelocity.x + velocity.y*_preVelocity.y > 0) {
@@ -227,7 +230,16 @@
         }
         
         _preVelocity = velocity;
-	}
+
+        if(velocity.x > 0) {
+            // NSLog(@"gesture went right");
+            [self movingPanelToRightWithOffSet:offsetX];
+        } else {
+            // NSLog(@"gesture went left");
+            [self movingPanelToLeftWithOffset:offsetX];
+        }
+        
+    }
 }
 
 #pragma mark -
@@ -242,8 +254,8 @@
     }
                      completion:^(BOOL finished) {
                          if (finished) {
-                             
-                             _centerViewController.rightButton.tag = 0;
+                            _centerViewController.rightButton.tag = 0;
+                            _centerViewController.mainImageView.userInteractionEnabled = NO;
                          }
                      }];
 }
@@ -258,6 +270,8 @@
                      completion:^(BOOL finished) {
                          if (finished) {
                              _centerViewController.leftButton.tag = 0;
+                             
+                             _centerViewController.mainImageView.userInteractionEnabled = NO;
                          }
                      }];
 }
@@ -269,8 +283,42 @@
                      completion:^(BOOL finished) {
                          if (finished) {
                              [self resetMainView];
+                             _centerViewController.mainImageView.userInteractionEnabled = YES;
                          }
                      }];
 }
 
+#pragma mark - movingCenterView
+
+- (void)movingPanelToRightWithOffSet:(CGFloat)offset
+{
+    CGFloat alpha = offset / (self.view.frame.size.width - PANEL_WIDTH);
+    
+    _leftPanelViewController.view.alpha = alpha;
+    _leftPanelViewController.view.frame = CGRectMake(10 * (1 - alpha), 10 * (1 - alpha), _leftPanelViewController.view.frame.size.width, _leftPanelViewController.view.frame.size.height);
+}
+
+- (void)movingPanelToLeftWithOffset:(CGFloat)offset
+{
+    CGFloat alpha = offset / (self.view.frame.size.width - PANEL_WIDTH);
+    _backGroundView.alpha = 1- alpha;
+    _rightPanelViewController.view.frame = CGRectMake(CGRectGetWidth(_rightPanelViewController.view.frame) - 5 * - alpha, 5 * alpha, _rightPanelViewController.view.frame.size.width, _rightPanelViewController.view.frame.size.height);
+//     _rightPanelViewController.view.alpha = offset / (self.view.frame.size.width - PANEL_WIDTH);
+}
+
+#pragma mark - handleRegesture
+- (void)handleGesture:(UIGestureRecognizer *)sender
+{
+    if (_showPanel) {
+        [self movePanelToOriginalPosition];
+    }
+}
+
+- (BOOL) isShowPanel
+{
+    if (_showPanel) {
+        [self movePanelToOriginalPosition];
+    }
+    return _showPanel;
+}
 @end

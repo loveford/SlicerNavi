@@ -26,5 +26,6 @@
 
 @property (nonatomic, retain) IBOutlet UIButton *leftButton;
 @property (nonatomic, retain) IBOutlet UIButton *rightButton;
+@property (nonatomic, retain) IBOutlet UIImageView *mainImageView;
 
 @end

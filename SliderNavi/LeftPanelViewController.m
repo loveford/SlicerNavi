@@ -24,6 +24,15 @@
 #pragma mark -
 #pragma mark View Did Load/Unload
 
+- (void)dealloc
+{
+    self.myTableView = nil;
+    self.cellMain = nil;
+    self.arrayOfAnimals = nil;
+    self.delegate = nil;
+    [super dealloc];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

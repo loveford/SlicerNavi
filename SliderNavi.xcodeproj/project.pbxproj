@@ -210,6 +210,10 @@
 		2AE7A2D2172A86D300BCCEBE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				2AD702F7172269DA00E8E38F /* ViewController.h */,
+				2AD702F8172269DA00E8E38F /* ViewController.m */,
+				2AD7030717226E6700E8E38F /* SecondViewCtrlViewController.h */,
+				2AD7030817226E6700E8E38F /* SecondViewCtrlViewController.m */,
 				2AE7A31B172A898500BCCEBE /* Animal.h */,
 				2AE7A31C172A898500BCCEBE /* Animal.m */,
 				2AE7A2CB172A86C600BCCEBE /* LeftPanelViewController.h */,
@@ -218,10 +222,6 @@
 				2AE7A2CE172A86C600BCCEBE /* RightPanelViewController.m */,
 				2AE7A322172A90DD00BCCEBE /* CenterViewController.h */,
 				2AE7A323172A90DD00BCCEBE /* CenterViewController.m */,
-				2AD702F7172269DA00E8E38F /* ViewController.h */,
-				2AD702F8172269DA00E8E38F /* ViewController.m */,
-				2AD7030717226E6700E8E38F /* SecondViewCtrlViewController.h */,
-				2AD7030817226E6700E8E38F /* SecondViewCtrlViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";

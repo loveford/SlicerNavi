@@ -27,4 +27,12 @@
     return self;
 }
 
+
+- (void)dealloc
+{
+    self.title = nil;
+    self.image = nil;
+    self.creator = nil;
+    [super dealloc];
+}
 @end

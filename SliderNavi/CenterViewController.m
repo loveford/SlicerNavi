@@ -12,7 +12,6 @@
 
 @interface CenterViewController ()
 
-@property (nonatomic, retain) IBOutlet UIImageView *mainImageView;
 @property (nonatomic, retain) IBOutlet UILabel *imageTitle;
 @property (nonatomic, retain) IBOutlet UILabel *imageCreator;
 
@@ -25,9 +24,25 @@
 #pragma mark -
 #pragma mark View Did Load/Unload
 
+- (void)dealloc
+{
+    self.imageCreator = nil;
+    self.imageTitle = nil;
+    self.imagesArray = nil;
+    self.leftButton = nil;
+    self.rightButton = nil;
+    self.delegate = nil;
+    [super dealloc];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    [self.mainImageView addGestureRecognizer:gestureRecognizer];
+    self.mainImageView.userInteractionEnabled = YES;
+    [gestureRecognizer release];
 }
 
 - (void)viewDidUnload
